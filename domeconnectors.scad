@@ -1,6 +1,6 @@
-$fn=30;
+$fn=25;
 
-//beamEnd(beamDiameter=7, ballDiameter=10, length=25, connectorLength=0, connectorDiameter=3, screwDiameter=2, outer=false, thickness=3, threshold=0.1);
+//beamEnd(beamDiameter=7, ballDiameter=10, length=25, connectorLength=0, connectorDiameter=3, screwDiameter=2, outer=true, thickness=3, threshold=0.1);
 
 //hub(ballDiameter=10, beamCount=5, height = 10, outerCoverageShare = 0.0, thickness=2, threshold=0.0);
 
@@ -165,16 +165,13 @@ module beamEndOuter(beamDiameter, length, thickness) {
 				difference() {
 					cylinder(h=((thickness/2)+1), d=(beamDiameter+thickness+1));
 					union() {
-						translate([0,0,-1]) {
-							cylinder(h=((thickness/2)+3), d=beamDiameter);
-						}
 						rotate_extrude(convexity = 10) {
-							translate([(beamDiameter/2),0,0]) {
-								difference() {
+							union() {
+								translate([(beamDiameter/2),0,0]) {
 									circle(d=thickness);
-									translate([(-thickness/2)-1,(-thickness/2)-1]){
-										square(size=[(thickness/2)+1,thickness+2]);
-									}
+								}
+								translate([0,(-thickness/2),0]) {
+									square(size=[(beamDiameter/2),thickness]);
 								}
 							}
 						}
@@ -196,16 +193,13 @@ module beamEndInner(beamDiameter, length, thickness) {
 				difference() {
 					cylinder(h=((thickness/2)+1), d=(beamDiameter+thickness+1));
 					union() {
-						translate([0,0,-1]) {
-							cylinder(h=((thickness/2)+3), d=beamDiameter);
-						}
 						rotate_extrude(convexity = 10) {
-							translate([(beamDiameter/2),0,0]) {
-								difference() {
+							union() {
+								translate([(beamDiameter/2),0,0]) {
 									circle(d=thickness);
-									translate([(-thickness/2)-1,(-thickness/2)-1]){
-										square(size=[(thickness/2)+1,thickness+2]);
-									}
+								}
+								translate([0,(-thickness/2),0]) {
+									square(size=[(beamDiameter/2),thickness]);
 								}
 							}
 						}
