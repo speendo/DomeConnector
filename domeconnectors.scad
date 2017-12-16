@@ -10,11 +10,11 @@ completePart(
 	beamCount=5,
 	beamDiameter=8,
 	beamEndLength=30,
-	beamEndConnectorLength=3,
+	beamEndConnectorLength=0.5,
 	beamEndConnectorDiameter=3,
 	screwDiameter=2,
 	beamEndOuter=false,
-	hubHeight=10,
+	hubHeight=8,
 	thickness=2,
 	beamEndThreshold=0,
 	ballThreshold=0.2,
@@ -55,7 +55,7 @@ module completePart(
 		union() {
 			for(i=[0:beamCount]) {
 				rotate(a=[0,0,i*(360/beamCount)]) {
-					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter(ballDiameter, beamCount, thickness))/2)+ballThreshold,0,((ballDiameter/2)+ballThreshold)]) {
+					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter(ballDiameter, beamCount, thickness))/2)+ballThreshold,0,((hubHeight/2))]) {
 						rotate([0,-90,0]) {
 							beamEnd(
 								beamDiameter=beamDiameter,
@@ -85,10 +85,6 @@ module hub(ballDiameter, beamCount, height, outerCoverageShare, thickness, thres
 	innerDiameter = innerCoverageShare==undef ? (hubCenterDiameter-ballDiameter-(2*thickness)) : (hubCenterDiameter-(innerCoverageShare*ballDiameter));
 		
 	outerDiameter = (hubCenterDiameter+(outerCoverageShare*ballDiameter));
-
-echo(outerDiameter);
-echo(hubCenterDiameter);
-echo(innerDiameter);
 
 	translate([0,0,(height/2)]) {
 		difference() {
