@@ -1,45 +1,140 @@
-$fn=15;
+/* [General] */
 
-//beamEnd(beamDiameter=7, ballDiameter=10, length=25, connectorLength=0, connectorDiameter=3, screwDiameter=2, outer=true, thickness=3, threshold=0.1);
+part="Hub with Beam Ends"; // [Bottom Hub with Beam Ends, Hub, Beam End]
 
-//bottomHub(ballDiameter=10, beamCount=5, height = 10, outerCoverageShare = 0.0, thickness=2, threshold=0.0);
+// Number of Beam Ends (min. 2)
+beamCount=5;
 
+// Beam Diameter
+beamDiameter=8;
 
-completeBottomPart(
-	ballDiameter=10,
-	ballOuterCoverageShare=0.5,
-	beamCount=11,
-	beamDiameter=8,
-	beamEndLength=30,
-	beamEndConnectorLength=-2,
-	beamEndConnectorDiameter=3,
-	screwDiameter=2,
-	beamEndOuter=false,
-	hubHeight=8,
-	thickness=2,
-	beamEndThreshold=0,
-	ballThreshold=0.2,
-	ballInnerCoverageShare=undef
-);
+// Plug or Shell
+beamEndOuter=false; // [false:No, true:Yes]
 
-/*
-completePart(
-	ballDiameter=10,
-	ballOuterCoverageShare=0.5,
-	beamCount=5,
-	beamDiameter=8,
-	beamEndLength=30,
-	beamEndConnectorLength=-2,
-	beamEndConnectorDiameter=3,
-	screwDiameter=2,
-	beamEndOuter=false,
-	hubHeight=8,
-	thickness=2,
-	beamEndThreshold=0,
-	ballThreshold=0.2,
-	ballInnerCoverageShare=undef
-);
-*/
+// Fastening Screw Hole Diameter
+screwDiameter=2;
+
+// Ball Diameter
+ballDiameter=10;
+
+// Wall Thickness
+thickness=2;
+
+// lower is faster - higher is smoother (use a low value for drafting, increase it before generating the .stl)
+resolution = 20; // [15:300]
+
+/* [Thresholds] */
+
+// Threshold between the Ball and the Joint (if you plan to print the ball inside the joint, a greater value might be benificial)
+ballThreshold=0.2;
+
+// Threshold between the Beam and the Beam End
+beamEndThreshold=0;
+
+/* [Other Values] */
+
+// Beam End Length (also the clearence you have to correct for inaccurately cut beams)
+beamEndLength=30;
+
+// Hub Height
+hubHeight=8;
+
+// Length of Connector Piece between Ball and Shell (can be negative)
+beamEndConnectorLength=-2;
+
+// Thickness of Connector Piece between Ball and Shell
+beamEndConnectorDiameter=4;
+
+// Ball Joint Share Outer (outer shell around the ball)
+ballOuterCoverageShare=1; //[-1:1]
+
+// Automatic calculation for the inner Coverage Share
+calcInnerCoverageShare = false; // [false:Manual, true:Automatic]
+
+// Ball Joint Share Inner (inner shell around the ball; make sure the joint is not broken!)
+ballInnerCoverageShare=1; //[-1:1]
+
+/* [Hidden] */
+
+$fn=resolution;
+
+usedBallInnerCoverageShare = calcInnerCoverageShare == true ? undef : ballInnerCoverageShare;
+
+if (part == "Hub with Beam Ends") {
+	completePart(
+		ballDiameter=ballDiameter,
+		ballOuterCoverageShare=ballOuterCoverageShare,
+		beamCount=beamCount,
+		beamDiameter=beamDiameter,
+		beamEndLength=beamEndLength,
+		beamEndConnectorLength=beamEndConnectorLength,
+		beamEndConnectorDiameter=beamEndConnectorDiameter,
+		screwDiameter=screwDiameter,
+		beamEndOuter=beamEndOuter,
+		hubHeight=hubHeight,
+		thickness=thickness,
+		beamEndThreshold=beamEndThreshold,
+		ballThreshold=ballThreshold,
+		ballInnerCoverageShare=usedBallInnerCoverageShare
+	);
+} else if (part == "Bottom Hub with Beam Ends") {
+	completeBottomPart(
+		ballDiameter=ballDiameter,
+		ballOuterCoverageShare=ballOuterCoverageShare,
+		beamCount=beamCount,
+		beamDiameter=beamDiameter,
+		beamEndLength=beamEndLength,
+		beamEndConnectorLength=beamEndConnectorLength,
+		beamEndConnectorDiameter=beamEndConnectorDiameter,
+		screwDiameter=screwDiameter,
+		beamEndOuter=beamEndOuter,
+		hubHeight=hubHeight,
+		thickness=thickness,
+		beamEndThreshold=beamEndThreshold,
+		ballThreshold=ballThreshold,
+		ballInnerCoverageShare=usedBallInnerCoverageShare
+	);
+} else if (part == "Hub") {
+	hub(
+		ballDiameter=ballDiameter, 
+		beamCount=beamCount, 
+		height=hubHeight,
+		outerCoverageShare=ballOuterCoverageShare,
+		thickness=thickness,
+		threshold=ballThreshold,
+		innerCoverageShare=usedBallInnerCoverageShare
+	);
+} else if (part == "Beam End") {
+	beamEnd(
+		beamDiameter=beamDiameter,
+		ballDiameter=ballDiameter, 
+		length=beamEndLength,
+		connectorLength=beamEndConnectorLength, 
+		connectorDiameter=beamEndConnectorDiameter, 
+		screwDiameter=screwDiameter, 
+		outer=beamEndOuter, 
+		thickness=thickness, 
+		threshold=beamEndThreshold
+	);	
+} else {
+	// this should not happen
+	completePart(
+		ballDiameter=ballDiameter,
+		ballOuterCoverageShare=ballOuterCoverageShare,
+		beamCount=beamCount,
+		beamDiameter=beamDiameter,
+		beamEndLength=beamEndLength,
+		beamEndConnectorLength=beamEndConnectorLength,
+		beamEndConnectorDiameter=beamEndConnectorDiameter,
+		screwDiameter=screwDiameter,
+		beamEndOuter=beamEndOuter,
+		hubHeight=hubHeight,
+		thickness=thickness,
+		beamEndThreshold=beamEndThreshold,
+		ballThreshold=ballThreshold,
+		ballInnerCoverageShare=ballInnerCoverageShare
+	);
+}
 
 module completeBottomPart(
 	ballDiameter,
