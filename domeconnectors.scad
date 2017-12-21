@@ -186,7 +186,7 @@ module completebasePart(
 			for(i=[1:beamCount]) {
 				rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
 					// control this later
-					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter(ballDiameter, (2*beamCount), thickness, ballThreshold))/2),0,((hubHeight/2))]) {
+					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter(ballDiameter, ((2*beamCount)-2), thickness, ballThreshold))/2),0,((hubHeight/2))]) {
 						rotate([0,-90,0]) {
 							beamEnd(
 								beamDiameter=beamDiameter,
@@ -266,15 +266,14 @@ module completePart(
 }
 
 module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverageShare, thickness, threshold, autoInnerCoverageShare=true) {
-
-	hubCenterDiameter = hubCenterDiameter(ballDiameter, (2*beamCount), thickness, threshold);
+	hubCenterDiameter = hubCenterDiameter(ballDiameter, ((2*beamCount)-2), thickness, threshold);
 	outerDiameter = outerDiameter(ballDiameter, hubCenterDiameter, outerCoverageShare, threshold);
 	innerDiameter = innerDiameter(ballDiameter, hubCenterDiameter, thickness, innerCoverageShare, threshold, autoInnerCoverageShare);
 	
 	basePlatePosY = (-1)*(((ballDiameter+threshold)/2));
 	
-	outerSectionX = circleSegment((outerDiameter/2),((outerDiameter/2)-basePlatePosY));
-	innerSectionX = circleSegment((innerDiameter/2),((innerDiameter/2)-basePlatePosY));
+	outerSectionX = circleSegment((outerDiameter/2),((outerDiameter/2)-basePlatePosY),thickness);
+	innerSectionX = circleSegment((innerDiameter/2),((innerDiameter/2)-basePlatePosY),thickness);
 	
 	difference() {
 		translate([0,0,(height/2)]) {
@@ -551,4 +550,4 @@ function innerDiameter(ballDiameter, hubCenterDiameter, thickness, innerCoverage
 
 function basePartBallAngle(i, beamCount) = ((i-1)*(180/(beamCount-1)));
 
-function circleSegment(r,h) = 2*sqrt(2*r*h-pow(h,2));
+function circleSegment(r,h,thickness) = (2*r*h > pow(h,2)) ? 2*sqrt(2*r*h-pow(h,2)) : -(thickness+1);
