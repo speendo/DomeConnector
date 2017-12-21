@@ -1,6 +1,6 @@
 /* [General] */
 
-part="Hub with Beam Ends"; // [Hub with Beam Ends, Bottom Hub with Beam Ends, Hub, Bottom Hub, Beam End]
+part="Hub with Beam Ends"; // [Hub with Beam Ends, Base Hub with Beam Ends, Hub, Base Hub, Beam End]
 
 // Number of Beam Ends (min. 2)
 beamCount=5; // 1
@@ -76,8 +76,8 @@ if (part == "Hub with Beam Ends") {
 		ballThreshold=ballThreshold,
 		autoInnerCoverageShare=autoInnerCoverageShare
 	);
-} else if (part == "Bottom Hub with Beam Ends") {
-	completeBottomPart(
+} else if (part == "Base Hub with Beam Ends") {
+	completebasePart(
 		ballDiameter=ballDiameter,
 		ballOuterCoverageShare=ballOuterCoverageShare,
 		ballInnerCoverageShare=ballInnerCoverageShare,
@@ -105,8 +105,8 @@ if (part == "Hub with Beam Ends") {
 		threshold=ballThreshold,
 		autoInnerCoverageShare=autoInnerCoverageShare
 	);
-} else if (part == "Bottom Hub") {
-	bottomHub(
+} else if (part == "Base Hub") {
+	baseHub(
 		ballDiameter=ballDiameter, 
 		beamCount=beamCount, 
 		height=hubHeight,
@@ -149,7 +149,7 @@ if (part == "Hub with Beam Ends") {
 	);
 }
 
-module completeBottomPart(
+module completebasePart(
 	ballDiameter,
 	ballOuterCoverageShare,
 	ballInnerCoverageShare,
@@ -168,7 +168,7 @@ module completeBottomPart(
 ) {
 	// Hub
 	color("darkred") {
-		bottomHub(
+		baseHub(
 			ballDiameter=ballDiameter, 
 			beamCount=beamCount, 
 			height=hubHeight,
@@ -184,7 +184,7 @@ module completeBottomPart(
 	color("yellow") {
 		union() {
 			for(i=[1:beamCount]) {
-				rotate(a=[0,0,bottomPartBallAngle(i,beamCount)]) {
+				rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
 					// control this later
 					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter(ballDiameter, (2*beamCount), thickness, ballThreshold))/2),0,((hubHeight/2))]) {
 						rotate([0,-90,0]) {
@@ -265,7 +265,7 @@ module completePart(
 	}
 }
 
-module bottomHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverageShare, thickness, threshold, autoInnerCoverageShare=true) {
+module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverageShare, thickness, threshold, autoInnerCoverageShare=true) {
 
 	hubCenterDiameter = hubCenterDiameter(ballDiameter, (2*beamCount), thickness, threshold);
 	outerDiameter = outerDiameter(ballDiameter, hubCenterDiameter, outerCoverageShare, threshold);
@@ -283,7 +283,7 @@ module bottomHub(ballDiameter, beamCount, height, outerCoverageShare, innerCover
 				hubHeartPiece(height, outerDiameter, innerDiameter, thickness);
 		
 				// Holes
-				hubBottomHoles(beamCount, ballDiameter, hubCenterDiameter, threshold);
+				hubbaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold);
 			}
 		}
 		
@@ -423,10 +423,10 @@ module hubHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
 	}
 }
 
-module hubBottomHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
+module hubbaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
 	union() {
 		for(i=[1:beamCount]) {
-			rotate(a=[0,0,bottomPartBallAngle(i,beamCount)]) {
+			rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
 				translate([(hubCenterDiameter/2),0,0]) {
 					sphere(d=ballDiameter + (2*threshold));
 				}
@@ -549,6 +549,6 @@ function outerDiameter(ballDiameter, hubCenterDiameter, outerCoverageShare, thre
 
 function innerDiameter(ballDiameter, hubCenterDiameter, thickness, innerCoverageShare, threshold, autoInnerCoverageShare) = autoInnerCoverageShare ? (hubCenterDiameter-(ballDiameter+(2*threshold))-(2*thickness)) : (hubCenterDiameter-(innerCoverageShare*(ballDiameter+(2*threshold))));
 
-function bottomPartBallAngle(i, beamCount) = ((i-1)*(180/(beamCount-1)));
+function basePartBallAngle(i, beamCount) = ((i-1)*(180/(beamCount-1)));
 
 function circleSegment(r,h) = 2*sqrt(2*r*h-pow(h,2));
