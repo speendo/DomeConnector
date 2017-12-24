@@ -270,7 +270,7 @@ module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverag
 	outerDiameter = outerDiameter(ballDiameter, hubCenterDiameter, outerCoverageShare, threshold);
 	innerDiameter = innerDiameter(ballDiameter, hubCenterDiameter, thickness, innerCoverageShare, threshold, autoInnerCoverageShare);
 	
-	basePlatePosY = (-1)*(((ballDiameter+threshold)/2));
+	basePlatePosY = (-1)*(((ballDiameter+threshold)/2)+thickness);
 	
 	outerSectionX = circleSegment((outerDiameter/2),((outerDiameter/2)-basePlatePosY),thickness);
 	innerSectionX = circleSegment((innerDiameter/2),((innerDiameter/2)-basePlatePosY),thickness);
@@ -287,39 +287,33 @@ module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverag
 		}
 		
 		union() {
-			translate([(-outerDiameter/2)-1,(-1)*(((outerDiameter/2)+1)),-1]){
-				cube([outerDiameter+2, ((outerDiameter/2)+1+basePlatePosY-thickness),height+2]);
-			}
-			translate([0,basePlatePosY,0]) {
-				difference() {
-#					translate([(-outerSectionX/2)-1,-(((3*thickness)/2)+1),-1]){
-						cube([outerSectionX+2, thickness+1, height+2]);
-					}
+			difference() {
+				translate([(-outerSectionX/2)-1,(-outerDiameter/2)-1,-1]) {
+					cube([outerSectionX+2,(outerDiameter/2)+1+basePlatePosY,height+2]);
+				}
+				translate([0,basePlatePosY,0]) {
 					union() {
 						translate([((innerSectionX+thickness)/2),-(thickness/2),(thickness/2)]) {
-							cube([((outerSectionX-innerSectionX)/2)-thickness, thickness, height-thickness]);
+							cube([((outerSectionX-innerSectionX)/2)-thickness, (thickness/2)+1, height-thickness]);
 						}
 						translate([((thickness-outerSectionX)/2),-(thickness/2),(thickness/2)]) {
-							cube([((outerSectionX-innerSectionX)/2)-thickness, thickness, height-thickness]);
+							cube([((outerSectionX-innerSectionX)/2)-thickness, (thickness/2)+1, height-thickness]);
 						}
 
-						difference() {
-							union() {
-								translate([-((outerSectionX-thickness)/2),0,(thickness/2)]){
-									rotate([90,0,90]) {
-										cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
-										translate([0,height-thickness,0]) {
-											cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
-										}
-									}
+
+						translate([-((outerSectionX-thickness)/2),0,(thickness/2)]){
+							rotate([90,0,90]) {
+								cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
+								translate([0,height-thickness,0]) {
+									cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
 								}
-								translate([((innerSectionX+thickness)/2),0,(thickness/2)]){
-									rotate([90,0,90]) {
-										cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
-										translate([0,height-thickness,0]) {
-											cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
-										}
-									}
+							}
+						}
+						translate([((innerSectionX+thickness)/2),0,(thickness/2)]){
+							rotate([90,0,90]) {
+								cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
+								translate([0,height-thickness,0]) {
+									cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
 								}
 							}
 						}
@@ -329,13 +323,12 @@ module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverag
 						translate([((-outerSectionX+thickness)/2),0,(thickness/2)]) {
 							cylinder(h=height-thickness,d=thickness);
 						}
-#						translate([innerSectionX/2,0,(thickness/2)]) {
+						translate([(innerSectionX+thickness)/2,0,(thickness/2)]) {
 							cylinder(h=height-thickness,d=thickness);
 						}
 						translate([((-innerSectionX-thickness)/2),0,(thickness/2)]) {
 							cylinder(h=height-thickness,d=thickness);
 						}
-						
 						translate([((outerSectionX-thickness)/2),0,(thickness/2)]) {
 							sphere(d=thickness);
 						}
