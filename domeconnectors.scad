@@ -46,13 +46,13 @@ beamEndConnectorLength=-2; // 0.01
 beamEndConnectorDiameter=4; // 0.01
 
 // Ball Joint Share Outer (outer shell around the ball)
-ballOuterCoverageShare=0.5; //[-1:0.01:1]
+ballOuterCoverageShare=0.5; //[-0.01:0.01:1]
 
 // Automatic calculation for the inner Coverage Share
 autoInnerCoverageShare = false;
 
 // Ball Joint Share Inner (inner shell around the ball; make sure the joint is not broken!)
-ballInnerCoverageShare=1; //[-1:0.01:1]
+ballInnerCoverageShare=1; //[-0.01:0.01:5]
 
 /* [Hidden] */
 
@@ -292,7 +292,7 @@ module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverag
 			}
 			translate([0,basePlatePosY,0]) {
 				difference() {
-					translate([(-outerSectionX/2)-1,(-1.5)*(thickness),-1]){
+#					translate([(-outerSectionX/2)-1,-(((3*thickness)/2)+1),-1]){
 						cube([outerSectionX+2, thickness+1, height+2]);
 					}
 					union() {
@@ -305,7 +305,7 @@ module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverag
 
 						difference() {
 							union() {
-								translate([-((outerSectionX-thickness)/2),0,thickness-1]){
+								translate([-((outerSectionX-thickness)/2),0,(thickness/2)]){
 									rotate([90,0,90]) {
 										cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
 										translate([0,height-thickness,0]) {
@@ -313,7 +313,7 @@ module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverag
 										}
 									}
 								}
-								translate([((innerSectionX+thickness)/2),0,thickness-1]){
+								translate([((innerSectionX+thickness)/2),0,(thickness/2)]){
 									rotate([90,0,90]) {
 										cylinder(h=((outerSectionX-innerSectionX)/2)-thickness,d=thickness);
 										translate([0,height-thickness,0]) {
@@ -329,7 +329,7 @@ module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverag
 						translate([((-outerSectionX+thickness)/2),0,(thickness/2)]) {
 							cylinder(h=height-thickness,d=thickness);
 						}
-						translate([((innerSectionX+thickness)/2),0,(thickness/2)]) {
+#						translate([innerSectionX/2,0,(thickness/2)]) {
 							cylinder(h=height-thickness,d=thickness);
 						}
 						translate([((-innerSectionX-thickness)/2),0,(thickness/2)]) {
