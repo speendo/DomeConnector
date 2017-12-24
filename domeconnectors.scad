@@ -1,21 +1,10 @@
 /* [General] */
 
+// The part that is generated
 part="Hub with Beam Ends"; // [Hub with Beam Ends, Base Hub with Beam Ends, Hub, Base Hub, Beam End]
 
 // Number of Beam Ends (min. 2)
 beamCount=5; // 1
-
-// Beam Diameter
-beamDiameter=8; // 0.01
-
-// Plug or Shell
-beamEndPlug=false;
-
-// Fastening Screw Hole Diameter
-screwDiameter=2; // 0.01
-
-// Ball Diameter
-ballDiameter=10; // 0.01
 
 // Wall Thickness
 thickness=2; // 0.01
@@ -23,21 +12,47 @@ thickness=2; // 0.01
 // lower is faster - higher is smoother (use a low value for drafting, increase it before generating the .stl)
 resolution = 20; // [15:1:300]
 
-/* [Thresholds] */
+/* [Hub and Ball Joint Specs] */
+
+// Ball Diameter
+ballDiameter=10; // 0.01
 
 // Threshold between the Ball and the Joint (if you plan to print the ball inside the joint, a greater value might be benificial)
 ballThreshold=0.2; // 0.001
 
+// Hub Height
+hubHeight=8; // 0.01
+
+// Outer Ball Joint (outer shell around the ball)
+inputTypeBallOuter = "relative"; // [absolute, relative]
+
+ballOuterCoverageAbs=2.02; // 0.001
+
+ballOuterCoverageRel=0.5; //[-0.01:0.01:1]
+
+// Inner Ball Joint (inner shell around the ball; make sure the joint is not broken!)
+inputTypeBallInner = "auto"; // [auto, absolute, relative]
+
+ballInnerCoverageAbs=10.02; // 0.001
+
+ballInnerCoverageRel=0.5; //[-0.01:0.01:5]
+
+/* [Beam End Specs] */
+
+// Plug or Shell
+beamEndPlug=false;
+
+// Beam Diameter
+beamDiameter=8; // 0.01
+
+// Fastening Screw Hole Diameter
+screwDiameter=2; // 0.01
+
 // Threshold between the Beam and the Beam End
 beamEndThreshold=0; // 0.001
 
-/* [Other Values] */
-
 // Beam End Length (also the clearence you have to correct for inaccurately cut beams)
 beamEndLength=30; // 0.01
-
-// Hub Height
-hubHeight=8; // 0.01
 
 // Length of Connector Piece between Ball and Shell (can be negative)
 beamEndConnectorLength=-2; // 0.01
@@ -45,24 +60,32 @@ beamEndConnectorLength=-2; // 0.01
 // Thickness of Connector Piece between Ball and Shell
 beamEndConnectorDiameter=4; // 0.01
 
-// Ball Joint Share Outer (outer shell around the ball)
-ballOuterCoverageShare=0.5; //[-0.01:0.01:1]
-
-// Automatic calculation for the inner Coverage Share
-autoInnerCoverageShare = false;
-
-// Ball Joint Share Inner (inner shell around the ball; make sure the joint is not broken!)
-ballInnerCoverageShare=1; //[-0.01:0.01:5]
-
 /* [Hidden] */
 
 $fn=resolution;
 
+// Coverage Specifications
+ballOuterCoverage=(inputTypeBallOuter == "relative") ? 
+	ballOuterCoverageRel*((ballDiameter/2)+ballThreshold) :
+		(inputTypeBallOuter == "absolute") ?
+			ballOuterCoverageAbs :
+			// this should not happen
+			ballOuterCoverageRel*(ballDiameter+(2*ballThreshold));
+
+ballInnerCoverage=(inputTypeBallInner == "auto") ?
+	((ballDiameter/2)+ballThreshold+thickness) :
+		(inputTypeBallInner == "relative") ?
+			ballInnerCoverageRel*((ballDiameter/2)+ballThreshold) :
+				(inputTypeBallInner == "absolute") ?
+					ballInnerCoverageAbs :
+					// this should not happen
+					ballInnerCoverageRel*(ballDiameter+(2*ballThreshold));
+
 if (part == "Hub with Beam Ends") {
 	completePart(
 		ballDiameter=ballDiameter,
-		ballOuterCoverageShare=ballOuterCoverageShare,
-		ballInnerCoverageShare=ballInnerCoverageShare,
+		ballOuterCoverage=ballOuterCoverage,
+		ballInnerCoverage=ballInnerCoverage,
 		beamCount=beamCount,
 		beamDiameter=beamDiameter,
 		beamEndLength=beamEndLength,
@@ -73,14 +96,13 @@ if (part == "Hub with Beam Ends") {
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
-		ballThreshold=ballThreshold,
-		autoInnerCoverageShare=autoInnerCoverageShare
+		ballThreshold=ballThreshold
 	);
 } else if (part == "Base Hub with Beam Ends") {
 	completebasePart(
 		ballDiameter=ballDiameter,
-		ballOuterCoverageShare=ballOuterCoverageShare,
-		ballInnerCoverageShare=ballInnerCoverageShare,
+		ballOuterCoverage=ballOuterCoverage,
+		ballInnerCoverage=ballInnerCoverage,
 		beamCount=beamCount,
 		beamDiameter=beamDiameter,
 		beamEndLength=beamEndLength,
@@ -91,30 +113,27 @@ if (part == "Hub with Beam Ends") {
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
-		ballThreshold=ballThreshold,
-		autoInnerCoverageShare=autoInnerCoverageShare
+		ballThreshold=ballThreshold
 	);
 } else if (part == "Hub") {
 	hub(
 		ballDiameter=ballDiameter, 
 		beamCount=beamCount, 
 		height=hubHeight,
-		outerCoverageShare=ballOuterCoverageShare,
-		innerCoverageShare=ballInnerCoverageShare,
+		outerCoverage=ballOuterCoverage,
+		innerCoverage=ballInnerCoverage,
 		thickness=thickness,
-		threshold=ballThreshold,
-		autoInnerCoverageShare=autoInnerCoverageShare
+		threshold=ballThreshold
 	);
 } else if (part == "Base Hub") {
 	baseHub(
 		ballDiameter=ballDiameter, 
 		beamCount=beamCount, 
 		height=hubHeight,
-		outerCoverageShare=ballOuterCoverageShare,
-		innerCoverageShare=ballInnerCoverageShare,
+		outerCoverage=ballOuterCoverage,
+		innerCoverage=ballInnerCoverage,
 		thickness=thickness,
-		threshold=ballThreshold,
-		autoInnerCoverageShare=autoInnerCoverageShare
+		threshold=ballThreshold
 	);
 } else if (part == "Beam End") {
 	beamEnd(
@@ -132,8 +151,8 @@ if (part == "Hub with Beam Ends") {
 	// this should not happen
 	completePart(
 		ballDiameter=ballDiameter,
-		ballOuterCoverageShare=ballOuterCoverageShare,
-		ballInnerCoverageShare=ballInnerCoverageShare,
+		ballOuterCoverage=ballOuterCoverage,
+		ballInnerCoverage=ballInnerCoverage,
 		beamCount=beamCount,
 		beamDiameter=beamDiameter,
 		beamEndLength=beamEndLength,
@@ -144,15 +163,14 @@ if (part == "Hub with Beam Ends") {
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
-		ballThreshold=ballThreshold,
-		autoInnerCoverageShare=autoInnerCoverageShare
+		ballThreshold=ballThreshold
 	);
 }
 
 module completebasePart(
 	ballDiameter,
-	ballOuterCoverageShare,
-	ballInnerCoverageShare,
+	ballOuterCoverage,
+	ballInnerCoverage,
 	beamCount, 
 	beamDiameter, 
 	beamEndLength, 
@@ -163,8 +181,7 @@ module completebasePart(
 	hubHeight,
 	thickness, 
 	beamEndThreshold, 
-	ballThreshold,
-	autoInnerCoverageShare=true 
+	ballThreshold
 ) {
 	// Hub
 	color("darkred") {
@@ -172,11 +189,10 @@ module completebasePart(
 			ballDiameter=ballDiameter, 
 			beamCount=beamCount, 
 			height=hubHeight,
-			outerCoverageShare=ballOuterCoverageShare,
-			innerCoverageShare=ballInnerCoverageShare,
+			outerCoverage=ballOuterCoverage,
+			innerCoverage=ballInnerCoverage,
 			thickness=thickness,
-			threshold=ballThreshold,
-			autoInnerCoverageShare=autoInnerCoverageShare
+			threshold=ballThreshold
 		);
 	}
 	
@@ -210,8 +226,8 @@ module completebasePart(
 
 module completePart(
 	ballDiameter,
-	ballOuterCoverageShare,
-	ballInnerCoverageShare,
+	ballOuterCoverage,
+	ballInnerCoverage,
 	beamCount, 
 	beamDiameter, 
 	beamEndLength, 
@@ -222,8 +238,7 @@ module completePart(
 	hubHeight,
 	thickness, 
 	beamEndThreshold, 
-	ballThreshold,
-	autoInnerCoverageShare=true 
+	ballThreshold
 ) {
 	// Hub
 	color("darkred") {
@@ -231,11 +246,10 @@ module completePart(
 			ballDiameter=ballDiameter, 
 			beamCount=beamCount, 
 			height=hubHeight,
-			outerCoverageShare=ballOuterCoverageShare,
-			innerCoverageShare=ballInnerCoverageShare,
+			outerCoverage=ballOuterCoverage,
+			innerCoverage=ballInnerCoverage,
 			thickness=thickness,
-			threshold=ballThreshold,
-			autoInnerCoverageShare=autoInnerCoverageShare
+			threshold=ballThreshold
 		);
 	}
 	
@@ -265,10 +279,10 @@ module completePart(
 	}
 }
 
-module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverageShare, thickness, threshold, autoInnerCoverageShare=true) {
+module baseHub(ballDiameter, beamCount, height, outerCoverage, innerCoverage, thickness, threshold) {
 	hubCenterDiameter = hubCenterDiameter(ballDiameter, ((2*beamCount)-2), thickness, threshold);
-	outerDiameter = outerDiameter(ballDiameter, hubCenterDiameter, outerCoverageShare, threshold);
-	innerDiameter = innerDiameter(ballDiameter, hubCenterDiameter, thickness, innerCoverageShare, threshold, autoInnerCoverageShare);
+	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
+	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
 	
 	basePlatePosY = (-1)*(((ballDiameter+threshold)/2)+thickness);
 	
@@ -360,11 +374,11 @@ module baseHub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverag
 	}
 }
 
-module hub(ballDiameter, beamCount, height, outerCoverageShare, innerCoverageShare, thickness, threshold, autoInnerCoverageShare=true) {
+module hub(ballDiameter, beamCount, height, outerCoverage, innerCoverage, thickness, threshold) {
 
 	hubCenterDiameter = hubCenterDiameter(ballDiameter, beamCount, thickness, threshold);		
-	outerDiameter = outerDiameter(ballDiameter, hubCenterDiameter, outerCoverageShare, threshold);
-	innerDiameter = innerDiameter(ballDiameter, hubCenterDiameter, thickness, innerCoverageShare, threshold, autoInnerCoverageShare);
+	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
+	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
 		
 
 	translate([0,0,(height/2)]) {
@@ -537,9 +551,9 @@ module roundHub(outerDiameter, innerDiameter, thickness) {
 
 function hubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount));
 
-function outerDiameter(ballDiameter, hubCenterDiameter, outerCoverageShare, threshold) = (hubCenterDiameter+(outerCoverageShare*(ballDiameter+(2*threshold))));
+function outerDiameter(hubCenterDiameter, outerCoverage) = (hubCenterDiameter+(2*outerCoverage));
 
-function innerDiameter(ballDiameter, hubCenterDiameter, thickness, innerCoverageShare, threshold, autoInnerCoverageShare) = autoInnerCoverageShare ? (hubCenterDiameter-(ballDiameter+(2*threshold))-(2*thickness)) : (hubCenterDiameter-(innerCoverageShare*(ballDiameter+(2*threshold))));
+function innerDiameter(hubCenterDiameter, innerCoverage) = (hubCenterDiameter-(2*innerCoverage));
 
 function basePartBallAngle(i, beamCount) = ((i-1)*(180/(beamCount-1)));
 
