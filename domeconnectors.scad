@@ -12,7 +12,20 @@ thickness=2; // 0.01
 // lower is faster - higher is smoother (use a low value for drafting, increase it before generating the .stl)
 resolution = 20; // [15:1:300]
 
-/* [Hub and Ball Joint Specs] */
+/* [Hub] */
+// Hub Height
+hubHeight=8; // 0.01
+
+// Specify value for hub Diameter?
+inputTypeHubDiameter="auto"; // [auto, auto-ceil, manual]
+
+// Hub Diameter (only applies when <autoHubDiameter = manual>)
+hubDiameterManual=15; // 0.01
+
+// Hub Diameter ceil, specify as 10^hubDiameterCeil (only applies when <autoHubDiameter = auto-ceil>)
+hubDiameterCeil=-2; // 1
+
+/* [Ball Joint Specs] */
 
 // Ball Diameter
 ballDiameter=10; // 0.01
@@ -20,21 +33,22 @@ ballDiameter=10; // 0.01
 // Threshold between the Ball and the Joint (if you plan to print the ball inside the joint, a greater value might be benificial)
 ballThreshold=0.2; // 0.001
 
-// Hub Height
-hubHeight=8; // 0.01
-
 // Outer Ball Joint (outer shell around the ball)
 inputTypeBallOuter = "relative"; // [absolute, relative]
 
+// only applies when <inputTypeBallOuter = absolute>
 ballOuterCoverageAbs=2.02; // 0.001
 
+// only applies when <inputTypeBallOuter = relative>
 ballOuterCoverageRel=0.5; //[-0.01:0.01:1]
 
 // Inner Ball Joint (inner shell around the ball; make sure the joint is not broken!)
 inputTypeBallInner = "auto"; // [auto, absolute, relative]
 
+// only applies when <inputTypeBallInner = absolute>
 ballInnerCoverageAbs=10.02; // 0.001
 
+// only applies when <inputTypeBallInner = relative>
 ballInnerCoverageRel=0.5; //[-0.01:0.01:5]
 
 /* [Beam End Specs] */
@@ -64,8 +78,22 @@ beamEndConnectorDiameter=4; // 0.01
 
 $fn=resolution;
 
+// Hub Diameter
+autoHubCenterDiameter=(part == "Base Hub with Beam Ends" || part == "Base Hub") ?
+			autoHubCenterDiameter(ballDiameter, (2*beamCount)-2, thickness, ballThreshold) :
+			autoHubCenterDiameter(ballDiameter, beamCount, thickness, ballThreshold);
+
+hubCenterDiameter=(inputTypeHubDiameter == "auto") ?
+	autoHubCenterDiameter :
+		(inputTypeHubDiameter == "auto-ceil") ?
+			(ceil(autoHubCenterDiameter/pow(10,hubDiameterCeil))*pow(10,hubDiameterCeil)) :
+				(inputTypeHubDiameter == "manual") ?
+					hubDiameterManual :
+					// this should not happen
+					autoHubCenterDiameter;
+
 // Coverage Specifications
-ballOuterCoverage=(inputTypeBallOuter == "relative") ? 
+ballOuterCoverage=(inputTypeBallOuter == "relative") ?
 	ballOuterCoverageRel*((ballDiameter/2)+ballThreshold) :
 		(inputTypeBallOuter == "absolute") ?
 			ballOuterCoverageAbs :
@@ -93,11 +121,15 @@ if (part == "Hub with Beam Ends") {
 		beamEndConnectorDiameter=beamEndConnectorDiameter,
 		screwDiameter=screwDiameter,
 		beamEndPlug=beamEndPlug,
+		hubCenterDiameter=hubCenterDiameter,
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
 		ballThreshold=ballThreshold
 	);
+	
+	// Print Hub Center Diameter to the console
+	echoUserInfo(hubCenterDiameter);
 } else if (part == "Base Hub with Beam Ends") {
 	completebasePart(
 		ballDiameter=ballDiameter,
@@ -110,31 +142,43 @@ if (part == "Hub with Beam Ends") {
 		beamEndConnectorDiameter=beamEndConnectorDiameter,
 		screwDiameter=screwDiameter,
 		beamEndPlug=beamEndPlug,
+		hubCenterDiameter=hubCenterDiameter,
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
 		ballThreshold=ballThreshold
 	);
+	
+	// Print Hub Center Diameter to the console
+	echoUserInfo(hubCenterDiameter);
 } else if (part == "Hub") {
 	hub(
-		ballDiameter=ballDiameter, 
-		beamCount=beamCount, 
+		ballDiameter=ballDiameter,
+		beamCount=beamCount,
+		hubCenterDiameter=hubCenterDiameter,
 		height=hubHeight,
 		outerCoverage=ballOuterCoverage,
 		innerCoverage=ballInnerCoverage,
 		thickness=thickness,
 		threshold=ballThreshold
 	);
+	
+	// Print Hub Center Diameter to the console
+	echoUserInfo(hubCenterDiameter);
 } else if (part == "Base Hub") {
 	baseHub(
-		ballDiameter=ballDiameter, 
-		beamCount=beamCount, 
+		ballDiameter=ballDiameter,
+		beamCount=beamCount,
+		hubCenterDiameter=hubCenterDiameter,
 		height=hubHeight,
 		outerCoverage=ballOuterCoverage,
 		innerCoverage=ballInnerCoverage,
 		thickness=thickness,
 		threshold=ballThreshold
 	);
+	
+	// Print Hub Center Diameter to the console
+	echoUserInfo(hubCenterDiameter);
 } else if (part == "Beam End") {
 	beamEnd(
 		beamDiameter=beamDiameter,
@@ -150,7 +194,7 @@ if (part == "Hub with Beam Ends") {
 } else {
 	// this should not happen
 	completePart(
-		ballDiameter=ballDiameter,
+				ballDiameter=ballDiameter,
 		ballOuterCoverage=ballOuterCoverage,
 		ballInnerCoverage=ballInnerCoverage,
 		beamCount=beamCount,
@@ -160,11 +204,15 @@ if (part == "Hub with Beam Ends") {
 		beamEndConnectorDiameter=beamEndConnectorDiameter,
 		screwDiameter=screwDiameter,
 		beamEndPlug=beamEndPlug,
+		hubCenterDiameter=hubCenterDiameter,
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
 		ballThreshold=ballThreshold
 	);
+	
+	// Print Hub Center Diameter to the console
+	echoUserInfo(hubCenterDiameter);
 }
 
 module completebasePart(
@@ -178,6 +226,7 @@ module completebasePart(
 	beamEndConnectorDiameter, 
 	screwDiameter, 
 	beamEndPlug=false, 
+	hubCenterDiameter=hubCenterDiameter,
 	hubHeight,
 	thickness, 
 	beamEndThreshold, 
@@ -186,8 +235,9 @@ module completebasePart(
 	// Hub
 	color("darkred") {
 		baseHub(
-			ballDiameter=ballDiameter, 
-			beamCount=beamCount, 
+			ballDiameter=ballDiameter,
+			beamCount=beamCount,
+			hubCenterDiameter=hubCenterDiameter,
 			height=hubHeight,
 			outerCoverage=ballOuterCoverage,
 			innerCoverage=ballInnerCoverage,
@@ -202,7 +252,7 @@ module completebasePart(
 			for(i=[1:beamCount]) {
 				rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
 					// control this later
-					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter(ballDiameter, ((2*beamCount)-2), thickness, ballThreshold))/2),0,((hubHeight/2))]) {
+					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
 						rotate([0,-90,0]) {
 							beamEnd(
 								beamDiameter=beamDiameter,
@@ -235,6 +285,7 @@ module completePart(
 	beamEndConnectorDiameter, 
 	screwDiameter, 
 	beamEndPlug=false, 
+	hubCenterDiameter=hubCenterDiameter,
 	hubHeight,
 	thickness, 
 	beamEndThreshold, 
@@ -245,6 +296,7 @@ module completePart(
 		hub(
 			ballDiameter=ballDiameter, 
 			beamCount=beamCount, 
+			hubCenterDiameter=hubCenterDiameter,
 			height=hubHeight,
 			outerCoverage=ballOuterCoverage,
 			innerCoverage=ballInnerCoverage,
@@ -258,7 +310,7 @@ module completePart(
 		union() {
 			for(i=[1:beamCount]) {
 				rotate(a=[0,0,i*(360/beamCount)]) {
-					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter(ballDiameter, beamCount, thickness, ballThreshold))/2),0,((hubHeight/2))]) {
+					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
 						rotate([0,-90,0]) {
 							beamEnd(
 								beamDiameter=beamDiameter,
@@ -279,8 +331,7 @@ module completePart(
 	}
 }
 
-module baseHub(ballDiameter, beamCount, height, outerCoverage, innerCoverage, thickness, threshold) {
-	hubCenterDiameter = hubCenterDiameter(ballDiameter, ((2*beamCount)-2), thickness, threshold);
+module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold) {
 	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
 	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
 	
@@ -300,6 +351,7 @@ module baseHub(ballDiameter, beamCount, height, outerCoverage, innerCoverage, th
 			}
 		}
 		
+// TODO: Control Thickness one more time
 		union() {
 			difference() {
 				translate([(-outerSectionX/2)-1,(-outerDiameter/2)-1,-1]) {
@@ -374,9 +426,8 @@ module baseHub(ballDiameter, beamCount, height, outerCoverage, innerCoverage, th
 	}
 }
 
-module hub(ballDiameter, beamCount, height, outerCoverage, innerCoverage, thickness, threshold) {
+module hub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold) {
 
-	hubCenterDiameter = hubCenterDiameter(ballDiameter, beamCount, thickness, threshold);		
 	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
 	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
 		
@@ -549,7 +600,11 @@ module roundHub(outerDiameter, innerDiameter, thickness) {
 	}
 }
 
-function hubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount));
+module echoUserInfo(hubCenterDiameter) {
+	echo(str("<b>HubCenterDiameter:</b> ", hubCenterDiameter));
+}
+
+function autoHubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount));
 
 function outerDiameter(hubCenterDiameter, outerCoverage) = (hubCenterDiameter+(2*outerCoverage));
 
