@@ -17,12 +17,12 @@ resolution = 20; // [15:1:300]
 hubHeight=8; // 0.01
 
 // Hub Diameter (auto, ceiled auto for "nicer" values or manual) - find the final hub center diameter in the console output
-inputTypeHubDiameter="auto"; // [auto, auto-ceil, manual]
+inputTypeHubDiameter="auto"; // [auto, auto ceil, manual]
 
 // Hub Diameter (only applies when <autoHubDiameter = manual>)
 hubDiameterManual=15; // 0.01
 
-// Hub Diameter ceil, specify as 10^hubDiameterCeil (only applies when <autoHubDiameter = auto-ceil>)
+// Hub Diameter ceil, specify as 10^hubDiameterCeil (only applies when <autoHubDiameter = auto ceil>)
 hubDiameterCeil=-2; // 1
 
 /* [Ball Joint Specs] */
@@ -34,7 +34,10 @@ ballDiameter=10; // 0.01
 ballThreshold=0.2; // 0.001
 
 // Outer Ball Joint (outer shell around the ball)
-inputTypeBallOuter = "relative"; // [absolute, relative]
+inputTypeBallOuter = "opening diameter"; // [opening diameter, absolute, relative]
+
+// only applies when <inputTypeBallOuter = opening diameter>
+ballOuterOpeningDiameter = 8.5; // 0.001
 
 // only applies when <inputTypeBallOuter = absolute>
 ballOuterCoverageAbs=2.02; // 0.001
@@ -80,34 +83,42 @@ $fn=resolution;
 
 // Hub Diameter
 autoHubCenterDiameter=(part == "Base Hub with Beam Ends" || part == "Base Hub") ?
-			autoHubCenterDiameter(ballDiameter, (2*beamCount)-2, thickness, ballThreshold) :
-			autoHubCenterDiameter(ballDiameter, beamCount, thickness, ballThreshold);
+	autoHubCenterDiameter(ballDiameter, (2*beamCount)-2, thickness, ballThreshold) :
+	autoHubCenterDiameter(ballDiameter, beamCount, thickness, ballThreshold);
 
 hubCenterDiameter=(inputTypeHubDiameter == "auto") ?
 	autoHubCenterDiameter :
-		(inputTypeHubDiameter == "auto-ceil") ?
-			(ceil(autoHubCenterDiameter/pow(10,hubDiameterCeil))*pow(10,hubDiameterCeil)) :
-				(inputTypeHubDiameter == "manual") ?
-					hubDiameterManual :
-					// this should not happen
-					autoHubCenterDiameter;
+	(inputTypeHubDiameter == "auto ceil") ?
+		(ceil(autoHubCenterDiameter/pow(10,hubDiameterCeil))*pow(10,hubDiameterCeil)) :
+		(inputTypeHubDiameter == "manual") ?
+			hubDiameterManual :
+			// this should not happen
+			autoHubCenterDiameter;
 
 // Coverage Specifications
-ballOuterCoverage=(inputTypeBallOuter == "relative") ?
-	ballOuterCoverageRel*((ballDiameter/2)+ballThreshold) :
-		(inputTypeBallOuter == "absolute") ?
-			ballOuterCoverageAbs :
-			// this should not happen
-			ballOuterCoverageRel*(ballDiameter+(2*ballThreshold));
+br=(ballDiameter/2)+ballThreshold;
+bh=sqrt(pow(br,2)-pow((ballOuterOpeningDiameter/2),2));
+bhr=(hubCenterDiameter/2)+bh;
+or=sqrt(pow((ballOuterOpeningDiameter/2),2)+pow(bhr,2));
+openingBallOuterCoverage=or-(hubCenterDiameter/2);
+
+ballOuterCoverage=(inputTypeBallOuter == "opening diameter") ?
+	openingBallOuterCoverage :
+	(inputTypeBallOuter == "relative") ?
+		ballOuterCoverageRel*((ballDiameter/2)+ballThreshold) :
+			(inputTypeBallOuter == "absolute") ?
+				ballOuterCoverageAbs :
+				// this should not happen
+				ballOuterCoverageRel*(ballDiameter+(2*ballThreshold));
 
 ballInnerCoverage=(inputTypeBallInner == "auto") ?
 	((ballDiameter/2)+ballThreshold+thickness) :
-		(inputTypeBallInner == "relative") ?
-			ballInnerCoverageRel*((ballDiameter/2)+ballThreshold) :
-				(inputTypeBallInner == "absolute") ?
-					ballInnerCoverageAbs :
-					// this should not happen
-					ballInnerCoverageRel*(ballDiameter+(2*ballThreshold));
+	(inputTypeBallInner == "relative") ?
+		ballInnerCoverageRel*((ballDiameter/2)+ballThreshold) :
+		(inputTypeBallInner == "absolute") ?
+			ballInnerCoverageAbs :
+			// this should not happen
+			ballInnerCoverageRel*(ballDiameter+(2*ballThreshold));
 
 if (part == "Hub with Beam Ends") {
 	completePart(
