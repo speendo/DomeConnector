@@ -37,7 +37,7 @@ ballThreshold=0.2; // 0.001
 inputTypeBallOuter = "opening diameter"; // [opening diameter, absolute, relative]
 
 // only applies when <inputTypeBallOuter = opening diameter>
-ballOuterOpeningDiameter = 8.5; // 0.001
+ballOuterOpeningDiameter = 9.6; // 0.001
 
 // only applies when <inputTypeBallOuter = absolute>
 ballOuterCoverageAbs=2.02; // 0.001
@@ -72,10 +72,10 @@ beamEndThreshold=0; // 0.001
 beamEndLength=30; // 0.01
 
 // Length of Connector Piece between Ball and Shell (can be negative)
-beamEndConnectorLength=-2; // 0.01
+beamEndConnectorLength=-0.8; // 0.01
 
 // Thickness of Connector Piece between Ball and Shell
-beamEndConnectorDiameter=4; // 0.01
+beamEndConnectorDiameter=5; // 0.01
 
 /* [Hidden] */
 
@@ -346,7 +346,7 @@ module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage
 	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
 	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
 	
-	basePlatePosY = (-1)*(((ballDiameter+threshold)/2)+thickness);
+	basePlatePosY = (-1)*(((ballDiameter+threshold+thickness)/2));
 	
 	outerSectionX = circleSegment((outerDiameter/2),((outerDiameter/2)-basePlatePosY),thickness);
 	innerSectionX = circleSegment((innerDiameter/2),((innerDiameter/2)-basePlatePosY),thickness);
@@ -362,7 +362,6 @@ module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage
 			}
 		}
 		
-// TODO: Control Thickness one more time
 		union() {
 			difference() {
 				translate([(-outerSectionX/2)-1,(-outerDiameter/2)-1,-1]) {
