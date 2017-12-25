@@ -12,11 +12,11 @@ thickness=2; // 0.01
 // lower is faster - higher is smoother (use a low value for drafting, increase it before generating the .stl)
 resolution = 20; // [15:1:300]
 
-/* [Hub] */
+/* [Hub Specs] */
 // Hub Height
 hubHeight=8; // 0.01
 
-// Specify value for hub Diameter?
+// Hub Diameter (auto, ceiled auto for "nicer" values or manual) - find the final hub center diameter in the console output
 inputTypeHubDiameter="auto"; // [auto, auto-ceil, manual]
 
 // Hub Diameter (only applies when <autoHubDiameter = manual>)
