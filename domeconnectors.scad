@@ -616,8 +616,9 @@ module roundHub(outerDiameter, innerDiameter, thickness) {
 
 module echoUserInfo(hubCenterDiameter, beamEndAddedLength) {
 	if (hubCenterDiameter != undef) {
-		echo(str("<b>HubCenterDiameter:</b> ",
-		hubCenterDiameter));
+		echo(str("<b>Hub Center Diameter:</b> ",
+		hubCenterDiameter,
+		" (through the middle of the balls)"));
 	}
 	if (beamEndAddedLength != undef) {
 		echo(str("<b>Beam End Added Length</b> (on both sides): ",
