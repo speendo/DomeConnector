@@ -140,7 +140,7 @@ if (part == "Hub with Beam Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter);
+	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
 } else if (part == "Base Hub with Beam Ends") {
 	completebasePart(
 		ballDiameter=ballDiameter,
@@ -161,7 +161,7 @@ if (part == "Hub with Beam Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter);
+	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
 } else if (part == "Hub") {
 	hub(
 		ballDiameter=ballDiameter,
@@ -202,6 +202,10 @@ if (part == "Hub with Beam Ends") {
 		thickness=thickness, 
 		threshold=beamEndThreshold
 	);	
+
+	// Print Hub Center Diameter to the console
+	echoUserInfo((thickness+ballDiameter/2+beamEndConnectorLength));
+
 } else {
 	// this should not happen
 	completePart(
@@ -223,7 +227,7 @@ if (part == "Hub with Beam Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter);
+	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
 }
 
 module completebasePart(
@@ -610,8 +614,20 @@ module roundHub(outerDiameter, innerDiameter, thickness) {
 	}
 }
 
-module echoUserInfo(hubCenterDiameter) {
-	echo(str("<b>HubCenterDiameter:</b> ", hubCenterDiameter));
+module echoUserInfo(hubCenterDiameter, beamEndAddedLength) {
+	if (hubCenterDiameter != undef) {
+		echo(str("<b>HubCenterDiameter:</b> ",
+		hubCenterDiameter));
+	}
+	if (beamEndAddedLength != undef) {
+		echo(str("<b>Beam End Added Length</b> (on both sides): ",
+		2*beamEndAddedLength));
+	}
+	if ((hubCenterDiameter != undef) && (beamEndAddedLength != undef)) {
+		echo(str("Remove approximately <b>",
+		(hubCenterDiameter + 2*beamEndAddedLength),
+		"</b> from strut lengths (angles not considered)"));
+	}
 }
 
 function autoHubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount));
