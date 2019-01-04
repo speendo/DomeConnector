@@ -3,6 +3,9 @@
 // The part that is generated
 part="Hub with Beam Ends"; // [Hub with Beam Ends, Base Hub with Beam Ends, Hub, Base Hub, Beam End]
 
+// For print preparation - print the joints inside the hub or outside
+jointsInside=true;
+
 // Number of Beam Ends (min. 2)
 beamCount=5; // 1
 
@@ -30,14 +33,15 @@ hubDiameterCeil=-2; // 1
 // Ball Diameter
 ballDiameter=10; // 0.01
 
-// Threshold between the Ball and the Joint (if you plan to print the ball inside the joint, a greater value might be benificial)
+// Threshold between the Ball and the Joint (if you plan to print the ball inside the joint, a bigger value might be benificial)
 ballThreshold=0.2; // 0.001
 
-// Outer Ball Joint (outer shell around the ball)
+// Outer Ball Joint (the narrowest outermost part the ball has to enter in order to insert or remove it from the joint)
 inputTypeBallOuter = "opening diameter"; // [opening diameter, absolute, relative]
 
-// only applies when <inputTypeBallOuter = opening diameter>
+// only applies when <inputTypeBallOuter = opening diameter> (smaller than ballDiameter)
 ballOuterOpeningDiameter = 9.6; // 0.001
+// must be <= ballDiameter + 2 * ballThreshold
 
 // only applies when <inputTypeBallOuter = absolute>
 ballOuterCoverageAbs=2.02; // 0.001
@@ -96,7 +100,7 @@ hubCenterDiameter=(inputTypeHubDiameter == "auto") ?
 			autoHubCenterDiameter;
 
 // Coverage Specifications
-br=(ballDiameter/2)+ballThreshold;
+br=(ballDiameter/2)+ballThreshold; // radius of empty space in hub for ball
 bh=sqrt(pow(br,2)-pow((ballOuterOpeningDiameter/2),2));
 bhr=(hubCenterDiameter/2)+bh;
 or=sqrt(pow((ballOuterOpeningDiameter/2),2)+pow(bhr,2));
@@ -136,7 +140,8 @@ if (part == "Hub with Beam Ends") {
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
-		ballThreshold=ballThreshold
+		ballThreshold=ballThreshold,
+		jointsInside=jointsInside
 	);
 	
 	// Print Hub Center Diameter to the console
@@ -157,7 +162,8 @@ if (part == "Hub with Beam Ends") {
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
-		ballThreshold=ballThreshold
+		ballThreshold=ballThreshold,
+		jointsInside=jointsInside
 	);
 	
 	// Print Hub Center Diameter to the console
@@ -209,7 +215,7 @@ if (part == "Hub with Beam Ends") {
 } else {
 	// this should not happen
 	completePart(
-				ballDiameter=ballDiameter,
+		ballDiameter=ballDiameter,
 		ballOuterCoverage=ballOuterCoverage,
 		ballInnerCoverage=ballInnerCoverage,
 		beamCount=beamCount,
@@ -223,7 +229,8 @@ if (part == "Hub with Beam Ends") {
 		hubHeight=hubHeight,
 		thickness=thickness,
 		beamEndThreshold=beamEndThreshold,
-		ballThreshold=ballThreshold
+		ballThreshold=ballThreshold,
+		jointsInside=jointsInside
 	);
 	
 	// Print Hub Center Diameter to the console
@@ -245,7 +252,8 @@ module completebasePart(
 	hubHeight,
 	thickness, 
 	beamEndThreshold, 
-	ballThreshold
+	ballThreshold,
+	jointsInside=true
 ) {
 	// Hub
 	color("darkred") {
@@ -267,14 +275,30 @@ module completebasePart(
 			for(i=[1:beamCount]) {
 				rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
 					// control this later
-					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
-						rotate([0,-90,0]) {
+					if (jointsInside) {
+						translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
+							rotate([0,-90,0]) {
+								beamEnd(
+									beamDiameter=beamDiameter,
+									ballDiameter=ballDiameter, 
+									length=beamEndLength,
+									connectorLength=beamEndConnectorLength, 
+									connectorDiameter=beamEndConnectorDiameter, 
+									screwDiameter=screwDiameter, 
+									plug=beamEndPlug, 
+									thickness=thickness, 
+									threshold=beamEndThreshold
+								);
+							}
+						}
+					} else {
+						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+beamDiameter)/2+ballThreshold,0,0]) {
 							beamEnd(
 								beamDiameter=beamDiameter,
 								ballDiameter=ballDiameter, 
 								length=beamEndLength,
-									connectorLength=beamEndConnectorLength, 
-									connectorDiameter=beamEndConnectorDiameter, 
+								connectorLength=beamEndConnectorLength, 
+								connectorDiameter=beamEndConnectorDiameter, 
 								screwDiameter=screwDiameter, 
 								plug=beamEndPlug, 
 								thickness=thickness, 
@@ -304,7 +328,8 @@ module completePart(
 	hubHeight,
 	thickness, 
 	beamEndThreshold, 
-	ballThreshold
+	ballThreshold,
+	jointsInside=true
 ) {
 	// Hub
 	color("darkred") {
@@ -325,14 +350,30 @@ module completePart(
 		union() {
 			for(i=[1:beamCount]) {
 				rotate(a=[0,0,i*(360/beamCount)]) {
-					translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
-						rotate([0,-90,0]) {
+					if (jointsInside) {
+						translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
+							rotate([0,-90,0]) {
+								beamEnd(
+									beamDiameter=beamDiameter,
+									ballDiameter=ballDiameter, 
+									length=beamEndLength,
+									connectorLength=beamEndConnectorLength, 
+									connectorDiameter=beamEndConnectorDiameter, 
+									screwDiameter=screwDiameter, 
+									plug=beamEndPlug, 
+									thickness=thickness, 
+									threshold=beamEndThreshold
+								);
+							}
+						}
+					} else {
+						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+beamDiameter)/2+ballThreshold,0,0]) {
 							beamEnd(
 								beamDiameter=beamDiameter,
 								ballDiameter=ballDiameter, 
 								length=beamEndLength,
-									connectorLength=beamEndConnectorLength, 
-									connectorDiameter=beamEndConnectorDiameter, 
+								connectorLength=beamEndConnectorLength, 
+								connectorDiameter=beamEndConnectorDiameter, 
 								screwDiameter=screwDiameter, 
 								plug=beamEndPlug, 
 								thickness=thickness, 

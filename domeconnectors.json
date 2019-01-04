@@ -1,0 +1,32 @@
+{
+    "parameterSets": {
+        "Testprint 1": {
+            "ballDiameter": "7.5",
+            "ballInnerCoverageAbs": "10.02",
+            "ballInnerCoverageRel": "0.5",
+            "ballOuterCoverageAbs": "2.02",
+            "ballOuterCoverageRel": "0.5",
+            "ballOuterOpeningDiameter": "7.2",
+            "ballThreshold": "0.3",
+            "beamCount": "2",
+            "beamDiameter": "5",
+            "beamEndConnectorDiameter": "5",
+            "beamEndConnectorLength": "-0.8",
+            "beamEndLength": "5",
+            "beamEndPlug": "false",
+            "beamEndThreshold": "0",
+            "hubDiameterCeil": "-2",
+            "hubDiameterManual": "15",
+            "hubHeight": "6",
+            "inputTypeBallInner": "auto",
+            "inputTypeBallOuter": "opening diameter",
+            "inputTypeHubDiameter": "auto",
+            "jointsInside": "true",
+            "part": "Beam End",
+            "resolution": "50",
+            "screwDiameter": "0",
+            "thickness": "2"
+        }
+    },
+    "fileFormatVersion": "1"
+}
