@@ -1,13 +1,16 @@
 /* [General] */
 
 // The part that is generated
-part="Hub with Beam Ends"; // [Hub with Beam Ends, Base Hub with Beam Ends, Hub, Base Hub, Beam End]
+part="Hub with Beam Ends"; // [Hub with Beam Ends, Base Hub with Beam Ends, Angled Base Hub with Beam Ends, Hub, Base Hub, Angled Base Hub, Beam End]
 
 // For print preparation - print the joints inside the hub or outside
 jointsInside=true;
 
 // Number of Beam Ends (min. 2)
 beamCount=5; // 1
+
+// Number of Angled Beam Ends (only for Angled Base Hub)
+angledBeamCount=1; // 1
 
 // Wall Thickness
 thickness=2; // 0.01
@@ -27,6 +30,9 @@ hubDiameterManual=15; // 0.01
 
 // Hub Diameter ceil, specify as 10^hubDiameterCeil (only applies when <autoHubDiameter = auto ceil>)
 hubDiameterCeil=-2; // 1
+
+// Base Hub Angle (only for Angled Base Hub)
+hubAngle = 90; // [0:0.01:180]
 
 /* [Ball Joint Specs] */
 
@@ -88,7 +94,9 @@ $fn=resolution;
 // Hub Diameter
 autoHubCenterDiameter=(part == "Base Hub with Beam Ends" || part == "Base Hub") ?
 	autoHubCenterDiameter(ballDiameter, (2*beamCount)-2, thickness, ballThreshold) :
-	autoHubCenterDiameter(ballDiameter, beamCount, thickness, ballThreshold);
+	(part == "Angled Base Hub with Beam Ends" || part == "Angled Base Hub") ?
+		autoHubCenterDiameter(ballDiameter, (beamCount + angledBeamCount), thickness, ballThreshold) :
+		autoHubCenterDiameter(ballDiameter, beamCount, thickness, ballThreshold);
 
 hubCenterDiameter=(inputTypeHubDiameter == "auto") ?
 	autoHubCenterDiameter :
@@ -192,6 +200,23 @@ if (part == "Hub with Beam Ends") {
 		innerCoverage=ballInnerCoverage,
 		thickness=thickness,
 		threshold=ballThreshold
+	);
+	
+	// Print Hub Center Diameter to the console
+	echoUserInfo(hubCenterDiameter);
+
+} else if (part == "Angled Base Hub") {
+	angledBaseHub(
+		ballDiameter=ballDiameter,
+		beamCount=beamCount,
+		angledBeamCount=angledBeamCount,
+		hubCenterDiameter=hubCenterDiameter,
+		height=hubHeight,
+		outerCoverage=ballOuterCoverage,
+		innerCoverage=ballInnerCoverage,
+		thickness=thickness,
+		threshold=ballThreshold,
+		hubAngle=hubAngle
 	);
 	
 	// Print Hub Center Diameter to the console
@@ -387,6 +412,22 @@ module completePart(
 	}
 }
 
+module angledBaseHub(ballDiameter, beamCount, angledBeamCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold, hubAngle) {
+	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
+	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
+		
+
+	translate([0,0,(height/2)]) {
+		difference() {
+			// Heart Piece
+			hubHeartPiece(height, outerDiameter, innerDiameter, thickness);
+			
+			// Holes
+			angledHubHoles(beamCount, angledBeamCount, ballDiameter, hubCenterDiameter, threshold);
+		}
+	}
+}
+
 module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold) {
 	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
 	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
@@ -403,7 +444,7 @@ module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage
 				hubHeartPiece(height, outerDiameter, innerDiameter, thickness);
 		
 				// Holes
-				hubbaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold);
+				hubBaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold);
 			}
 		}
 		
@@ -535,10 +576,26 @@ module hubHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
 	}
 }
 
-module hubbaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
+module hubBaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
 	union() {
 		for(i=[1:beamCount]) {
 			rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
+				translate([(hubCenterDiameter/2),0,0]) {
+					sphere(d=ballDiameter + (2*threshold));
+				}
+			}
+		}
+	}
+}
+
+module angledHubHoles(beamCount, angledBeamCount, ballDiameter, hubCenterDiameter, threshold) {
+	totalBeamCount = beamCount + angledBeamCount;
+	turnRatio = 360 / totalBeamCount;
+	angledTurnFactor = angledBeamCount / 2 + 0.5;
+	
+	union() {
+		for(i=[1:beamCount]) {
+			rotate(a=[0,0,(i - 1) * turnRatio + angledTurnFactor * turnRatio]) {
 				translate([(hubCenterDiameter/2),0,0]) {
 					sphere(d=ballDiameter + (2*threshold));
 				}
