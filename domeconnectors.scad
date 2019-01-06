@@ -415,12 +415,21 @@ module completePart(
 module angledBaseHub(ballDiameter, beamCount, angledBeamCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold, hubAngle) {
 	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
 	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
-		
+	
+	triangleHalfAngle = angledBeamCount * 180 / (beamCount + angledBeamCount);
+	echo(triangleHalfAngle);
+	triangleY = cos(triangleHalfAngle) * hubCenterDiameter + threshold + thickness;
 
 	translate([0,0,(height/2)]) {
 		difference() {
-			// Heart Piece
-			hubHeartPiece(height, outerDiameter, innerDiameter, thickness);
+			difference() {
+				// Heart Piece
+				hubHeartPiece(height, outerDiameter, innerDiameter, thickness);
+				// Cut away circle segment
+				translate([-outerDiameter/2 - 1,-triangleY,-height/2-1]) {
+#					cube([outerDiameter + 2, outerDiameter - triangleY + 1, height + 2]);
+				}
+			}
 			
 			// Holes
 			angledHubHoles(beamCount, angledBeamCount, ballDiameter, hubCenterDiameter, threshold);
@@ -595,7 +604,7 @@ module angledHubHoles(beamCount, angledBeamCount, ballDiameter, hubCenterDiamete
 	
 	union() {
 		for(i=[1:beamCount]) {
-			rotate(a=[0,0,(i - 1) * turnRatio + angledTurnFactor * turnRatio]) {
+			rotate(a=[0,0,270 + (i - 1) * turnRatio + angledTurnFactor * turnRatio]) {
 				translate([(hubCenterDiameter/2),0,0]) {
 					sphere(d=ballDiameter + (2*threshold));
 				}
@@ -729,7 +738,7 @@ module echoUserInfo(hubCenterDiameter, beamEndAddedLength) {
 	}
 }
 
-function autoHubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount));
+function autoHubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount)); // regular polygon radius (R): a/(2*sin(180/n))
 
 function outerDiameter(hubCenterDiameter, outerCoverage) = (hubCenterDiameter+(2*outerCoverage));
 
