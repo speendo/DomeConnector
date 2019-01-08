@@ -610,15 +610,15 @@ module beamEndShell(beamDiameter, length, thickness) {
 			}
 			translate([0,0,(length+(thickness/2))]) {
 				difference() {
-					cylinder(h=((thickness/2)+1), d=(beamDiameter+thickness+1));
+					cylinder(h=((thickness/2)+1), d=(beamDiameter+2*thickness+1));
 					union() {
 						rotate_extrude(convexity = 10) {
 							union() {
-								translate([(beamDiameter/2),0,0]) {
+								translate([((beamDiameter+thickness)/2),0,0]) {
 									circle(d=thickness);
 								}
 								translate([0,(-thickness/2),0]) {
-									square(size=[(beamDiameter/2),thickness]);
+									square(size=[((beamDiameter+thickness)/2),thickness]);
 								}
 							}
 						}
