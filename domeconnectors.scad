@@ -603,7 +603,7 @@ module beamEndPlug(beamDiameter, length, thickness) {
 
 module beamEndShell(beamDiameter, length, thickness) {
 	difference() {
-		cylinder(h=(length + thickness), d=(beamDiameter+thickness));
+		cylinder(h=(length + thickness), d=(beamDiameter+2*thickness));
 		union() {
 			translate([0,0,-1]) {
 				cylinder(h=length, d=(beamDiameter+1));
