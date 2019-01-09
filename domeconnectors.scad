@@ -403,7 +403,7 @@ module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage
 				hubHeartPiece(height, outerDiameter, innerDiameter, thickness);
 		
 				// Holes
-				hubbaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold);
+				hubBaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold);
 			}
 		}
 		
@@ -535,7 +535,7 @@ module hubHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
 	}
 }
 
-module hubbaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
+module hubBaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
 	union() {
 		for(i=[1:beamCount]) {
 			rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
@@ -672,7 +672,7 @@ module echoUserInfo(hubCenterDiameter, beamEndAddedLength) {
 	}
 }
 
-function autoHubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount));
+function autoHubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount)); // regular polygon radius (R): a/(2*sin(180/n))
 
 function outerDiameter(hubCenterDiameter, outerCoverage) = (hubCenterDiameter+(2*outerCoverage));
 
