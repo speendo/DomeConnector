@@ -657,18 +657,25 @@ module roundHub(outerDiameter, innerDiameter, thickness) {
 
 module echoUserInfo(hubCenterDiameter, beamEndAddedLength) {
 	if (hubCenterDiameter != undef) {
-		echo(str("<b>Hub Center Diameter:</b> ",
+		echo(str("<b>Hub Center Radius:</b> ",
+		hubCenterDiameter/2,
+		" (Diameter: ",
 		hubCenterDiameter,
-		" (through the middle of the balls)"));
+		" through the middle of the balls)"));
 	}
 	if (beamEndAddedLength != undef) {
-		echo(str("<b>Beam End Added Length</b> (on both sides): ",
-		2*beamEndAddedLength));
+		echo(str("<b>Beam End Added Length</b> (on one side): ",
+		beamEndAddedLength,
+		" (on both sides: ",
+		2*beamEndAddedLength,
+		")"));
 	}
 	if ((hubCenterDiameter != undef) && (beamEndAddedLength != undef)) {
 		echo(str("Remove approximately <b>",
+		(hubCenterDiameter/2 + beamEndAddedLength),
+		"</b> from strut lengths <b>on one side</b> (angles not considered) or ",
 		(hubCenterDiameter + 2*beamEndAddedLength),
-		"</b> from strut lengths (angles not considered)"));
+		" together <b>if hubCenterDiameter (and thickness) is the same on both sides of the strut</b> (entered manually)."));
 	}
 }
 
