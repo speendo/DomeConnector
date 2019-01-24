@@ -145,7 +145,7 @@ if (part == "Hub with Beam Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter, beamEndAddedLength=(thickness+ballDiameter/2+beamEndConnectorLength));
 } else if (part == "Base Hub with Beam Ends") {
 	completebasePart(
 		ballDiameter=ballDiameter,
@@ -167,7 +167,7 @@ if (part == "Hub with Beam Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter, beamEndAddedLength=(thickness+ballDiameter/2+beamEndConnectorLength));
 } else if (part == "Hub") {
 	hub(
 		ballDiameter=ballDiameter,
@@ -181,7 +181,7 @@ if (part == "Hub with Beam Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter);
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter);
 } else if (part == "Base Hub") {
 	baseHub(
 		ballDiameter=ballDiameter,
@@ -195,7 +195,7 @@ if (part == "Hub with Beam Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter);
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter);
 } else if (part == "Beam End") {
 	beamEnd(
 		beamDiameter=beamDiameter,
@@ -210,7 +210,7 @@ if (part == "Hub with Beam Ends") {
 	);	
 
 	// Print Hub Center Diameter to the console
-	echoUserInfo((thickness+ballDiameter/2+beamEndConnectorLength));
+	echoUserInfo(beamEndAddedLength=(thickness+ballDiameter/2+beamEndConnectorLength));
 
 } else {
 	// this should not happen
@@ -234,7 +234,7 @@ if (part == "Hub with Beam Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter, beamEndAddedLength=(thickness+ballDiameter/2+beamEndConnectorLength));
 }
 
 module completebasePart(

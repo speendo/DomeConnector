@@ -26,6 +26,33 @@
             "resolution": "50",
             "screwDiameter": "0",
             "thickness": "2"
+        },
+        "Straws": {
+            "ballDiameter": "7",
+            "ballInnerCoverageAbs": "10.02",
+            "ballInnerCoverageRel": "0.5",
+            "ballOuterCoverageAbs": "2.02",
+            "ballOuterCoverageRel": "0.6",
+            "ballOuterOpeningDiameter": "5.7",
+            "ballThreshold": "0.15",
+            "beamCount": "2",
+            "beamDiameter": "5",
+            "beamEndConnectorDiameter": "2.8",
+            "beamEndConnectorLength": "1.25",
+            "beamEndLength": "10",
+            "beamEndPlug": "false",
+            "beamEndThreshold": "0",
+            "hubDiameterCeil": "-2",
+            "hubDiameterManual": "15",
+            "hubHeight": "5",
+            "inputTypeBallInner": "auto",
+            "inputTypeBallOuter": "relative",
+            "inputTypeHubDiameter": "auto",
+            "jointsInside": "true",
+            "part": "Beam End",
+            "resolution": "50",
+            "screwDiameter": "0",
+            "thickness": "0.9"
         }
     },
     "fileFormatVersion": "1"
