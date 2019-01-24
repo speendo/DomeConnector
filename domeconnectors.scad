@@ -367,7 +367,7 @@ module completePart(
 							}
 						}
 					} else {
-						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+beamDiameter)/2+ballThreshold,0,0]) {
+						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+beamDiameter)/2+thickness+ballThreshold,0,0]) {
 							beamEnd(
 								beamDiameter=beamDiameter,
 								ballDiameter=ballDiameter, 
