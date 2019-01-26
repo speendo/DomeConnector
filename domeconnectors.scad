@@ -1,13 +1,13 @@
 /* [General] */
 
 // The part that is generated
-part="Hub with Beam Ends"; // [Hub with Beam Ends, Base Hub with Beam Ends, Hub, Base Hub, Beam End]
+part="Hub with Strut Ends"; // [Hub with Strut Ends, Base Hub with Strut Ends, Hub, Base Hub, Strut End]
 
 // For print preparation - print the joints inside the hub or outside
 jointsInside=true;
 
-// Number of Beam Ends (min. 2)
-beamCount=5; // 1
+// Number of Strut Ends (min. 2)
+strutCount=5; // 1
 
 // Wall Thickness
 thickness=2; // 0.01
@@ -58,37 +58,37 @@ ballInnerCoverageAbs=10.02; // 0.001
 // only applies when <inputTypeBallInner = relative>
 ballInnerCoverageRel=0.5; //[-0.01:0.01:5]
 
-/* [Beam End Specs] */
+/* [Strut End Specs] */
 
 // Plug or Shell
-beamEndPlug=false;
+strutEndPlug=false;
 
-// Beam Diameter
-beamDiameter=8; // 0.01
+// Strut Diameter
+strutDiameter=8; // 0.01
 
 // Fastening Screw Hole Diameter
 screwDiameter=2; // 0.01
 
-// Threshold between the Beam and the Beam End
-beamEndThreshold=0; // 0.001
+// Threshold between the Strut and the Strut End
+strutEndThreshold=0; // 0.001
 
-// Beam End Length (also the clearence you have to correct for inaccurately cut beams)
-beamEndLength=30; // 0.01
+// Strut End Length (also the clearence you have to correct for inaccurately cut struts)
+strutEndLength=30; // 0.01
 
 // Length of Connector Piece between Ball and Shell (can be negative)
-beamEndConnectorLength=-0.8; // 0.01
+strutEndConnectorLength=-0.8; // 0.01
 
 // Thickness of Connector Piece between Ball and Shell
-beamEndConnectorDiameter=5; // 0.01
+strutEndConnectorDiameter=5; // 0.01
 
 /* [Hidden] */
 
 $fn=resolution;
 
 // Hub Diameter
-autoHubCenterDiameter=(part == "Base Hub with Beam Ends" || part == "Base Hub") ?
-	autoHubCenterDiameter(ballDiameter, (2*beamCount)-2, thickness, ballThreshold) :
-	autoHubCenterDiameter(ballDiameter, beamCount, thickness, ballThreshold);
+autoHubCenterDiameter=(part == "Base Hub with Strut Ends" || part == "Base Hub") ?
+	autoHubCenterDiameter(ballDiameter, (2*strutCount)-2, thickness, ballThreshold) :
+	autoHubCenterDiameter(ballDiameter, strutCount, thickness, ballThreshold);
 
 hubCenterDiameter=(inputTypeHubDiameter == "auto") ?
 	autoHubCenterDiameter :
@@ -124,54 +124,54 @@ ballInnerCoverage=(inputTypeBallInner == "auto") ?
 			// this should not happen
 			ballInnerCoverageRel*(ballDiameter+(2*ballThreshold));
 
-if (part == "Hub with Beam Ends") {
+if (part == "Hub with Strut Ends") {
 	completePart(
 		ballDiameter=ballDiameter,
 		ballOuterCoverage=ballOuterCoverage,
 		ballInnerCoverage=ballInnerCoverage,
-		beamCount=beamCount,
-		beamDiameter=beamDiameter,
-		beamEndLength=beamEndLength,
-		beamEndConnectorLength=beamEndConnectorLength,
-		beamEndConnectorDiameter=beamEndConnectorDiameter,
+		strutCount=strutCount,
+		strutDiameter=strutDiameter,
+		strutEndLength=strutEndLength,
+		strutEndConnectorLength=strutEndConnectorLength,
+		strutEndConnectorDiameter=strutEndConnectorDiameter,
 		screwDiameter=screwDiameter,
-		beamEndPlug=beamEndPlug,
+		strutEndPlug=strutEndPlug,
 		hubCenterDiameter=hubCenterDiameter,
 		hubHeight=hubHeight,
 		thickness=thickness,
-		beamEndThreshold=beamEndThreshold,
+		strutEndThreshold=strutEndThreshold,
 		ballThreshold=ballThreshold,
 		jointsInside=jointsInside
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
-} else if (part == "Base Hub with Beam Ends") {
+	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+strutEndConnectorLength));
+} else if (part == "Base Hub with Strut Ends") {
 	completebasePart(
 		ballDiameter=ballDiameter,
 		ballOuterCoverage=ballOuterCoverage,
 		ballInnerCoverage=ballInnerCoverage,
-		beamCount=beamCount,
-		beamDiameter=beamDiameter,
-		beamEndLength=beamEndLength,
-		beamEndConnectorLength=beamEndConnectorLength,
-		beamEndConnectorDiameter=beamEndConnectorDiameter,
+		strutCount=strutCount,
+		strutDiameter=strutDiameter,
+		strutEndLength=strutEndLength,
+		strutEndConnectorLength=strutEndConnectorLength,
+		strutEndConnectorDiameter=strutEndConnectorDiameter,
 		screwDiameter=screwDiameter,
-		beamEndPlug=beamEndPlug,
+		strutEndPlug=strutEndPlug,
 		hubCenterDiameter=hubCenterDiameter,
 		hubHeight=hubHeight,
 		thickness=thickness,
-		beamEndThreshold=beamEndThreshold,
+		strutEndThreshold=strutEndThreshold,
 		ballThreshold=ballThreshold,
 		jointsInside=jointsInside
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
+	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+strutEndConnectorLength));
 } else if (part == "Hub") {
 	hub(
 		ballDiameter=ballDiameter,
-		beamCount=beamCount,
+		strutCount=strutCount,
 		hubCenterDiameter=hubCenterDiameter,
 		height=hubHeight,
 		outerCoverage=ballOuterCoverage,
@@ -185,7 +185,7 @@ if (part == "Hub with Beam Ends") {
 } else if (part == "Base Hub") {
 	baseHub(
 		ballDiameter=ballDiameter,
-		beamCount=beamCount,
+		strutCount=strutCount,
 		hubCenterDiameter=hubCenterDiameter,
 		height=hubHeight,
 		outerCoverage=ballOuterCoverage,
@@ -196,21 +196,21 @@ if (part == "Hub with Beam Ends") {
 	
 	// Print Hub Center Diameter to the console
 	echoUserInfo(hubCenterDiameter);
-} else if (part == "Beam End") {
-	beamEnd(
-		beamDiameter=beamDiameter,
+} else if (part == "Strut End") {
+	strutEnd(
+		strutDiameter=strutDiameter,
 		ballDiameter=ballDiameter, 
-		length=beamEndLength,
-		connectorLength=beamEndConnectorLength, 
-		connectorDiameter=beamEndConnectorDiameter, 
+		length=strutEndLength,
+		connectorLength=strutEndConnectorLength, 
+		connectorDiameter=strutEndConnectorDiameter, 
 		screwDiameter=screwDiameter, 
-		plug=beamEndPlug, 
+		plug=strutEndPlug, 
 		thickness=thickness, 
-		threshold=beamEndThreshold
+		threshold=strutEndThreshold
 	);	
 
 	// Print Hub Center Diameter to the console
-	echoUserInfo((thickness+ballDiameter/2+beamEndConnectorLength));
+	echoUserInfo((thickness+ballDiameter/2+strutEndConnectorLength));
 
 } else {
 	// this should not happen
@@ -218,40 +218,40 @@ if (part == "Hub with Beam Ends") {
 		ballDiameter=ballDiameter,
 		ballOuterCoverage=ballOuterCoverage,
 		ballInnerCoverage=ballInnerCoverage,
-		beamCount=beamCount,
-		beamDiameter=beamDiameter,
-		beamEndLength=beamEndLength,
-		beamEndConnectorLength=beamEndConnectorLength,
-		beamEndConnectorDiameter=beamEndConnectorDiameter,
+		strutCount=strutCount,
+		strutDiameter=strutDiameter,
+		strutEndLength=strutEndLength,
+		strutEndConnectorLength=strutEndConnectorLength,
+		strutEndConnectorDiameter=strutEndConnectorDiameter,
 		screwDiameter=screwDiameter,
-		beamEndPlug=beamEndPlug,
+		strutEndPlug=strutEndPlug,
 		hubCenterDiameter=hubCenterDiameter,
 		hubHeight=hubHeight,
 		thickness=thickness,
-		beamEndThreshold=beamEndThreshold,
+		strutEndThreshold=strutEndThreshold,
 		ballThreshold=ballThreshold,
 		jointsInside=jointsInside
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+beamEndConnectorLength));
+	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+strutEndConnectorLength));
 }
 
 module completebasePart(
 	ballDiameter,
 	ballOuterCoverage,
 	ballInnerCoverage,
-	beamCount, 
-	beamDiameter, 
-	beamEndLength, 
-	beamEndConnectorLength, 
-	beamEndConnectorDiameter, 
+	strutCount, 
+	strutDiameter, 
+	strutEndLength, 
+	strutEndConnectorLength, 
+	strutEndConnectorDiameter, 
 	screwDiameter, 
-	beamEndPlug=false, 
+	strutEndPlug=false, 
 	hubCenterDiameter=hubCenterDiameter,
 	hubHeight,
 	thickness, 
-	beamEndThreshold, 
+	strutEndThreshold, 
 	ballThreshold,
 	jointsInside=true
 ) {
@@ -259,7 +259,7 @@ module completebasePart(
 	color("darkred") {
 		baseHub(
 			ballDiameter=ballDiameter,
-			beamCount=beamCount,
+			strutCount=strutCount,
 			hubCenterDiameter=hubCenterDiameter,
 			height=hubHeight,
 			outerCoverage=ballOuterCoverage,
@@ -269,40 +269,40 @@ module completebasePart(
 		);
 	}
 	
-	// BeamEnds
+	// StrutEnds
 	color("yellow") {
 		union() {
-			for(i=[1:beamCount]) {
-				rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
+			for(i=[1:strutCount]) {
+				rotate(a=[0,0,basePartBallAngle(i,strutCount)]) {
 					// control this later
 					if (jointsInside) {
-						translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
+						translate([strutEndConnectorLength+strutEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
 							rotate([0,-90,0]) {
-								beamEnd(
-									beamDiameter=beamDiameter,
+								strutEnd(
+									strutDiameter=strutDiameter,
 									ballDiameter=ballDiameter, 
-									length=beamEndLength,
-									connectorLength=beamEndConnectorLength, 
-									connectorDiameter=beamEndConnectorDiameter, 
+									length=strutEndLength,
+									connectorLength=strutEndConnectorLength, 
+									connectorDiameter=strutEndConnectorDiameter, 
 									screwDiameter=screwDiameter, 
-									plug=beamEndPlug, 
+									plug=strutEndPlug, 
 									thickness=thickness, 
-									threshold=beamEndThreshold
+									threshold=strutEndThreshold
 								);
 							}
 						}
 					} else {
-						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+beamDiameter)/2+ballThreshold,0,0]) {
-							beamEnd(
-								beamDiameter=beamDiameter,
+						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+strutDiameter)/2+ballThreshold,0,0]) {
+							strutEnd(
+								strutDiameter=strutDiameter,
 								ballDiameter=ballDiameter, 
-								length=beamEndLength,
-								connectorLength=beamEndConnectorLength, 
-								connectorDiameter=beamEndConnectorDiameter, 
+								length=strutEndLength,
+								connectorLength=strutEndConnectorLength, 
+								connectorDiameter=strutEndConnectorDiameter, 
 								screwDiameter=screwDiameter, 
-								plug=beamEndPlug, 
+								plug=strutEndPlug, 
 								thickness=thickness, 
-								threshold=beamEndThreshold
+								threshold=strutEndThreshold
 							);
 						}
 					}
@@ -317,17 +317,17 @@ module completePart(
 	ballDiameter,
 	ballOuterCoverage,
 	ballInnerCoverage,
-	beamCount, 
-	beamDiameter, 
-	beamEndLength, 
-	beamEndConnectorLength, 
-	beamEndConnectorDiameter, 
+	strutCount, 
+	strutDiameter, 
+	strutEndLength, 
+	strutEndConnectorLength, 
+	strutEndConnectorDiameter, 
 	screwDiameter, 
-	beamEndPlug=false, 
+	strutEndPlug=false, 
 	hubCenterDiameter=hubCenterDiameter,
 	hubHeight,
 	thickness, 
-	beamEndThreshold, 
+	strutEndThreshold, 
 	ballThreshold,
 	jointsInside=true
 ) {
@@ -335,7 +335,7 @@ module completePart(
 	color("darkred") {
 		hub(
 			ballDiameter=ballDiameter, 
-			beamCount=beamCount, 
+			strutCount=strutCount, 
 			hubCenterDiameter=hubCenterDiameter,
 			height=hubHeight,
 			outerCoverage=ballOuterCoverage,
@@ -345,39 +345,39 @@ module completePart(
 		);
 	}
 	
-	// BeamEnds
+	// StrutEnds
 	color("yellow") {
 		union() {
-			for(i=[1:beamCount]) {
-				rotate(a=[0,0,i*(360/beamCount)]) {
+			for(i=[1:strutCount]) {
+				rotate(a=[0,0,i*(360/strutCount)]) {
 					if (jointsInside) {
-						translate([beamEndConnectorLength+beamEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
+						translate([strutEndConnectorLength+strutEndLength+thickness+((ballDiameter+hubCenterDiameter)/2),0,((hubHeight/2))]) {
 							rotate([0,-90,0]) {
-								beamEnd(
-									beamDiameter=beamDiameter,
+								strutEnd(
+									strutDiameter=strutDiameter,
 									ballDiameter=ballDiameter, 
-									length=beamEndLength,
-									connectorLength=beamEndConnectorLength, 
-									connectorDiameter=beamEndConnectorDiameter, 
+									length=strutEndLength,
+									connectorLength=strutEndConnectorLength, 
+									connectorDiameter=strutEndConnectorDiameter, 
 									screwDiameter=screwDiameter, 
-									plug=beamEndPlug, 
+									plug=strutEndPlug, 
 									thickness=thickness, 
-									threshold=beamEndThreshold
+									threshold=strutEndThreshold
 								);
 							}
 						}
 					} else {
-						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+beamDiameter)/2+ballThreshold,0,0]) {
-							beamEnd(
-								beamDiameter=beamDiameter,
+						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+strutDiameter)/2+ballThreshold,0,0]) {
+							strutEnd(
+								strutDiameter=strutDiameter,
 								ballDiameter=ballDiameter, 
-								length=beamEndLength,
-								connectorLength=beamEndConnectorLength, 
-								connectorDiameter=beamEndConnectorDiameter, 
+								length=strutEndLength,
+								connectorLength=strutEndConnectorLength, 
+								connectorDiameter=strutEndConnectorDiameter, 
 								screwDiameter=screwDiameter, 
-								plug=beamEndPlug, 
+								plug=strutEndPlug, 
 								thickness=thickness, 
-								threshold=beamEndThreshold
+								threshold=strutEndThreshold
 							);
 						}
 					}
@@ -387,7 +387,7 @@ module completePart(
 	}
 }
 
-module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold) {
+module baseHub(ballDiameter, strutCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold) {
 	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
 	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
 	
@@ -403,7 +403,7 @@ module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage
 				hubHeartPiece(height, outerDiameter, innerDiameter, thickness);
 		
 				// Holes
-				hubBaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold);
+				hubBaseHoles(strutCount, ballDiameter, hubCenterDiameter, threshold);
 			}
 		}
 		
@@ -481,7 +481,7 @@ module baseHub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage
 	}
 }
 
-module hub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold) {
+module hub(ballDiameter, strutCount, hubCenterDiameter, height, outerCoverage, innerCoverage, thickness, threshold) {
 
 	outerDiameter = outerDiameter(hubCenterDiameter, outerCoverage);
 	innerDiameter = innerDiameter(hubCenterDiameter, innerCoverage);
@@ -493,7 +493,7 @@ module hub(ballDiameter, beamCount, hubCenterDiameter, height, outerCoverage, in
 			hubHeartPiece(height, outerDiameter, innerDiameter, thickness);
 			
 			// Holes
-			hubHoles(beamCount, ballDiameter, hubCenterDiameter, threshold);
+			hubHoles(strutCount, ballDiameter, hubCenterDiameter, threshold);
 		}
 	}
 }
@@ -523,10 +523,10 @@ module hubHeartPiece(height, outerDiameter, innerDiameter, thickness) {
 	}
 }
 
-module hubHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
+module hubHoles(strutCount, ballDiameter, hubCenterDiameter, threshold) {
 	union() {
-		for(i=[1:beamCount]) {
-			rotate(a=[0,0,i*(360/beamCount)]) {
+		for(i=[1:strutCount]) {
+			rotate(a=[0,0,i*(360/strutCount)]) {
 				translate([(hubCenterDiameter/2),0,0]) {
 					sphere(d=ballDiameter + (2*threshold));
 				}
@@ -535,10 +535,10 @@ module hubHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
 	}
 }
 
-module hubBaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
+module hubBaseHoles(strutCount, ballDiameter, hubCenterDiameter, threshold) {
 	union() {
-		for(i=[1:beamCount]) {
-			rotate(a=[0,0,basePartBallAngle(i,beamCount)]) {
+		for(i=[1:strutCount]) {
+			rotate(a=[0,0,basePartBallAngle(i,strutCount)]) {
 				translate([(hubCenterDiameter/2),0,0]) {
 					sphere(d=ballDiameter + (2*threshold));
 				}
@@ -547,7 +547,7 @@ module hubBaseHoles(beamCount, ballDiameter, hubCenterDiameter, threshold) {
 	}
 }
 
-module beamEnd(beamDiameter, ballDiameter, length, connectorLength, connectorDiameter, screwDiameter, plug=true, thickness, threshold) {
+module strutEnd(strutDiameter, ballDiameter, length, connectorLength, connectorDiameter, screwDiameter, plug=true, thickness, threshold) {
 	difference() {
 		union() {
 			translate([0,0,length]) {
@@ -557,40 +557,40 @@ module beamEnd(beamDiameter, ballDiameter, length, connectorLength, connectorDia
 				}
 			}
 			if(plug) {
-				beamEndPlug(beamDiameter-threshold, length, thickness);
+				strutEndPlug(strutDiameter-threshold, length, thickness);
 			} else {
-				beamEndShell(beamDiameter+threshold, length, thickness);
+				strutEndShell(strutDiameter+threshold, length, thickness);
 			}
 		}
-		translate([0,((beamDiameter+threshold+(2*thickness))/2)+1,thickness+screwDiameter/2]) {
+		translate([0,((strutDiameter+threshold+(2*thickness))/2)+1,thickness+screwDiameter/2]) {
 			rotate([90,0,0]) {
-				cylinder(h=beamDiameter+threshold+(2*thickness)+2,d=screwDiameter);
+				cylinder(h=strutDiameter+threshold+(2*thickness)+2,d=screwDiameter);
 			}
 		}
 	}
 }
 
 
-module beamEndPlug(beamDiameter, length, thickness) {
+module strutEndPlug(strutDiameter, length, thickness) {
 	difference() {
 		union() {
-			cylinder(h=(length + thickness), d=(beamDiameter));
+			cylinder(h=(length + thickness), d=(strutDiameter));
 			translate([0,0,length]) {
-				cylinder(h=thickness, d=(beamDiameter+thickness));
+				cylinder(h=thickness, d=(strutDiameter+thickness));
 			}
 		}
 		union() {
 			translate([0,0,(length+(thickness/2))]) {
 				difference() {
-					cylinder(h=((thickness/2)+1), d=(beamDiameter+thickness+1));
+					cylinder(h=((thickness/2)+1), d=(strutDiameter+thickness+1));
 					union() {
 						rotate_extrude(convexity = 10) {
 							union() {
-								translate([(beamDiameter/2),0,0]) {
+								translate([(strutDiameter/2),0,0]) {
 									circle(d=thickness);
 								}
 								translate([0,(-thickness/2),0]) {
-									square(size=[(beamDiameter/2),thickness]);
+									square(size=[(strutDiameter/2),thickness]);
 								}
 							}
 						}
@@ -601,24 +601,24 @@ module beamEndPlug(beamDiameter, length, thickness) {
 	}
 }
 
-module beamEndShell(beamDiameter, length, thickness) {
+module strutEndShell(strutDiameter, length, thickness) {
 	difference() {
-		cylinder(h=(length + thickness), d=(beamDiameter+2*thickness));
+		cylinder(h=(length + thickness), d=(strutDiameter+2*thickness));
 		union() {
 			translate([0,0,-1]) {
-				cylinder(h=length, d=(beamDiameter+1));
+				cylinder(h=length, d=(strutDiameter+1));
 			}
 			translate([0,0,(length+(thickness/2))]) {
 				difference() {
-					cylinder(h=((thickness/2)+1), d=(beamDiameter+2*thickness+1));
+					cylinder(h=((thickness/2)+1), d=(strutDiameter+2*thickness+1));
 					union() {
 						rotate_extrude(convexity = 10) {
 							union() {
-								translate([((beamDiameter+thickness)/2),0,0]) {
+								translate([((strutDiameter+thickness)/2),0,0]) {
 									circle(d=thickness);
 								}
 								translate([0,(-thickness/2),0]) {
-									square(size=[((beamDiameter+thickness)/2),thickness]);
+									square(size=[((strutDiameter+thickness)/2),thickness]);
 								}
 							}
 						}
@@ -655,7 +655,7 @@ module roundHub(outerDiameter, innerDiameter, thickness) {
 	}
 }
 
-module echoUserInfo(hubCenterDiameter, beamEndAddedLength) {
+module echoUserInfo(hubCenterDiameter, strutEndAddedLength) {
 	if (hubCenterDiameter != undef) {
 		echo(str("<b>Hub Center Radius:</b> ",
 		hubCenterDiameter/2,
@@ -663,28 +663,28 @@ module echoUserInfo(hubCenterDiameter, beamEndAddedLength) {
 		hubCenterDiameter,
 		" through the middle of the balls)"));
 	}
-	if (beamEndAddedLength != undef) {
-		echo(str("<b>Beam End Added Length</b> (on one side): ",
-		beamEndAddedLength,
+	if (strutEndAddedLength != undef) {
+		echo(str("<b>Strut End Added Length</b> (on one side): ",
+		strutEndAddedLength,
 		" (on both sides: ",
-		2*beamEndAddedLength,
+		2*strutEndAddedLength,
 		")"));
 	}
-	if ((hubCenterDiameter != undef) && (beamEndAddedLength != undef)) {
+	if ((hubCenterDiameter != undef) && (strutEndAddedLength != undef)) {
 		echo(str("Remove approximately <b>",
-		(hubCenterDiameter/2 + beamEndAddedLength),
+		(hubCenterDiameter/2 + strutEndAddedLength),
 		"</b> from strut lengths <b>on one side</b> (angles not considered) or ",
-		(hubCenterDiameter + 2*beamEndAddedLength),
+		(hubCenterDiameter + 2*strutEndAddedLength),
 		" together <b>if hubCenterDiameter (and thickness) is the same on both sides of the strut</b> (entered manually)."));
 	}
 }
 
-function autoHubCenterDiameter(ballDiameter, beamCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/beamCount)); // regular polygon radius (R): a/(2*sin(180/n))
+function autoHubCenterDiameter(ballDiameter, strutCount, thickness, threshold) = (ballDiameter+(thickness/2)+(2*threshold))/(sin(180/strutCount)); // regular polygon radius (R): a/(2*sin(180/n))
 
 function outerDiameter(hubCenterDiameter, outerCoverage) = (hubCenterDiameter+(2*outerCoverage));
 
 function innerDiameter(hubCenterDiameter, innerCoverage) = (hubCenterDiameter-(2*innerCoverage));
 
-function basePartBallAngle(i, beamCount) = ((i-1)*(180/(beamCount-1)));
+function basePartBallAngle(i, strutCount) = ((i-1)*(180/(strutCount-1)));
 
 function circleSegment(r,h,thickness) = (2*r*h > pow(h,2)) ? 2*sqrt(2*r*h-pow(h,2)) : -(thickness+1);
