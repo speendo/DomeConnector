@@ -145,7 +145,7 @@ if (part == "Hub with Strut Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+strutEndConnectorLength));
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter, strutEndAddedLength=(thickness+ballDiameter/2+strutEndConnectorLength));
 } else if (part == "Base Hub with Strut Ends") {
 	completebasePart(
 		ballDiameter=ballDiameter,
@@ -167,7 +167,7 @@ if (part == "Hub with Strut Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+strutEndConnectorLength));
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter, strutEndAddedLength=(thickness+ballDiameter/2+strutEndConnectorLength));
 } else if (part == "Hub") {
 	hub(
 		ballDiameter=ballDiameter,
@@ -181,7 +181,7 @@ if (part == "Hub with Strut Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter);
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter);
 } else if (part == "Base Hub") {
 	baseHub(
 		ballDiameter=ballDiameter,
@@ -195,7 +195,7 @@ if (part == "Hub with Strut Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter);
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter);
 } else if (part == "Strut End") {
 	strutEnd(
 		strutDiameter=strutDiameter,
@@ -210,7 +210,7 @@ if (part == "Hub with Strut Ends") {
 	);	
 
 	// Print Hub Center Diameter to the console
-	echoUserInfo((thickness+ballDiameter/2+strutEndConnectorLength));
+	echoUserInfo(strutEndAddedLength=(thickness+ballDiameter/2+strutEndConnectorLength));
 
 } else {
 	// this should not happen
@@ -234,7 +234,7 @@ if (part == "Hub with Strut Ends") {
 	);
 	
 	// Print Hub Center Diameter to the console
-	echoUserInfo(hubCenterDiameter, (thickness+ballDiameter/2+strutEndConnectorLength));
+	echoUserInfo(hubCenterDiameter=hubCenterDiameter, strutEndAddedLength=(thickness+ballDiameter/2+strutEndConnectorLength));
 }
 
 module completebasePart(
@@ -367,7 +367,7 @@ module completePart(
 							}
 						}
 					} else {
-						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+strutDiameter)/2+ballThreshold,0,0]) {
+						translate([(outerDiameter(hubCenterDiameter, ballOuterCoverage)+strutDiameter)/2+thickness+ballThreshold,0,0]) {
 							strutEnd(
 								strutDiameter=strutDiameter,
 								ballDiameter=ballDiameter, 
